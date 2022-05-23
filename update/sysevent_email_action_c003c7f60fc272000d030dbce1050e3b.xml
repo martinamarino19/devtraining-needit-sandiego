@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sysevent_email_action">
     <sysevent_email_action action="INSERT_OR_UPDATE">
-        <action_insert>false</action_insert>
-        <action_update>false</action_update>
+        <action_insert>true</action_insert>
+        <action_update>true</action_update>
         <active>true</active>
-        <advanced_condition/>
+        <advanced_condition><![CDATA[  var rightNow = new GlideDateTime();
+  
+  var overdueNITasks = new GlideRecord('x_58872_needit_needit_task');
+  overdueNITasks.addQuery('due_date','<=',rightNow);
+  overdueNITasks.addQuery('state','<',3);
+  overdueNITasks.addQuery('assigned_to',current.assigned_to);
+  
+  overdueNITasks.query();
+  
+  // Print to the Message field on a notification 
+  template.print("In addition to this overdue NeedIt Task, you have " + (overdueNITasks.getRowCount() - 1) + " more overdue NeedIt Tasks.");]]></advanced_condition>
         <affected_field_on_event/>
-        <category display_value="Uncategorized" name="Uncategorized">c97d83137f4432005f58108c3ffa917a</category>
+        <category display_value="Approval" name="Approval">1a9d02137f232200ee2e108c3ffa9113</category>
         <collection>x_58872_needit_needit_task</collection>
-        <condition/>
+        <condition table="x_58872_needit_needit_task">due_dateNOTONToday@javascript:gs.beginningOfToday()@javascript:gs.endOfToday()^state&lt;3^EQ<item endquery="false" field="due_date" goto="false" newquery="false" operator="NOTON" or="false" value="Today@javascript:gs.beginningOfToday()@javascript:gs.endOfToday()"/>
+            <item display_value="Closed Complete" endquery="false" field="state" goto="false" newquery="false" operator="&lt;" or="false" value="3"/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </condition>
         <content_type>text/html</content_type>
         <default_interval/>
         <description/>
@@ -26,19 +39,19 @@
         <exclude_delegates>false</exclude_delegates>
         <force_delivery>false</force_delivery>
         <from/>
-        <generation_type>triggered</generation_type>
+        <generation_type>engine</generation_type>
         <importance/>
         <include_attachments>false</include_attachments>
         <item>event.parm1</item>
         <item_table/>
         <mandatory>false</mandatory>
         <message/>
-        <message_html><![CDATA[<p>Dear ${assigned_to.first_name},</p>
+        <message_html><![CDATA[<p><br />Dear ${assigned_to.first_name}, you must complete this task today&nbsp;</p>
 <p>An overdue&nbsp;NeedIt Task is assigned to you:</p>
 <p>Number: ${number}<br />Short description: ${short_description}</p>
 <p>Please complete this task as soon as possible.</p>
 <p>${mail_script:CountOverdueNeedItTasksAssignedTo}</p>
-<p><br /></p>
+<p>&nbsp;</p>
 <p>Click here to view the&nbsp;NeedIt Task record: ${URI_REF}</p>]]></message_html>
         <message_list/>
         <message_text/>
@@ -48,12 +61,12 @@
         <push_message_only>false</push_message_only>
         <recipient_fields>assigned_to</recipient_fields>
         <recipient_groups/>
-        <recipient_users/>
+        <recipient_users>46d44a23a9fe19810012d100cca80666,beth.anglin@example.com,6816f79cc0a8016401c5a33be04be441</recipient_users>
         <reply_to/>
         <send_self>true</send_self>
         <sms_alternate/>
         <style/>
-        <subject>Overdue NeedIt Task: ${number}</subject>
+        <subject>I will complete this task today.</subject>
         <subscribable>false</subscribable>
         <sys_class_name>sysevent_email_action</sys_class_name>
         <sys_created_by>admin</sys_created_by>
@@ -61,7 +74,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>c003c7f60fc272000d030dbce1050e3b</sys_id>
-        <sys_mod_count>13</sys_mod_count>
+        <sys_mod_count>18</sys_mod_count>
         <sys_name>Overdue NeedIt Task</sys_name>
         <sys_overrides/>
         <sys_package display_value="NeedIt" source="x_58872_needit">6ead8e780f603200cd674f8ce1050ed1</sys_package>
@@ -69,7 +82,7 @@
         <sys_scope display_value="NeedIt">6ead8e780f603200cd674f8ce1050ed1</sys_scope>
         <sys_update_name>sysevent_email_action_c003c7f60fc272000d030dbce1050e3b</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2020-12-02 16:07:21</sys_updated_on>
+        <sys_updated_on>2022-05-20 10:56:20</sys_updated_on>
         <sys_version>2</sys_version>
         <template/>
         <type>email</type>
